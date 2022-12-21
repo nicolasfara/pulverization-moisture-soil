@@ -23,6 +23,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.bundles.pulverization)
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
 
