@@ -9,11 +9,16 @@ import org.koin.core.component.inject
 class SoilMoistureBehaviour : Behaviour<StateOps, NoComm, Double, Boolean, Unit> {
     override val context: Context by inject()
 
+    companion object {
+        private const val TARGET_MOISTURE = 0.75
+    }
+
     override fun invoke(
         state: StateOps,
         export: List<NoComm>,
         sensedValues: Double,
     ): BehaviourOutput<StateOps, NoComm, Boolean, Unit> {
-        TODO("Not yet implemented")
+        val action = sensedValues < TARGET_MOISTURE
+        return BehaviourOutput(MoistureState(sensedValues), NoComm, action, Unit)
     }
 }
