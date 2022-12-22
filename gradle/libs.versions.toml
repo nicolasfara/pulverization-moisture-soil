@@ -3,12 +3,15 @@ kotlin = "1.7.22"
 detekt = "1.22.0"
 ktlint = "11.0.0"
 koin = "3.3.0"
+pi4j = "2.2.1"
+shadowjar = "7.1.2"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+shadowjar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowjar" }
 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -17,6 +20,11 @@ pulverization-core = { module = "it.nicolasfarabegoli.pulverization-framework:co
 pulverization-platform = { module = "it.nicolasfarabegoli.pulverization-framework:platform", version = "0.4.0" }
 pulverization-rabbitmq = { module = "it.nicolasfarabegoli.pulverization-framework:rabbitmq-platform", version = "0.4.0" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+pi4j-ktx = { module = "com.pi4j:pi4j-ktx", version.ref = "pi4j" }
+pi4j-core = { module = "com.pi4j:pi4j-core", version.ref = "pi4j" }
+pi4j-raspberry = { module = "com.pi4j:pi4j-plugin-raspberrypi", version.ref = "pi4j" }
+pi4j-gpio = { module = "com.pi4j:pi4j-plugin-pigpio", version.ref = "pi4j" }
 
 [bundles]
 pulverization = ["pulverization-core", "pulverization-platform", "pulverization-rabbitmq", "koin-core"]
+pi4j = ["pi4j-ktx", "pi4j-core", "pi4j-raspberry", "pi4j-gpio"]

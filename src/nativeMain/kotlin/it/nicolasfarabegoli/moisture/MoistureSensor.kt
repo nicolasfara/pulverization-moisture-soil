@@ -6,4 +6,7 @@ actual class MoistureSensor : Sensor<Double> {
     override fun sense(): Double {
         TODO("Not yet implemented")
     }
+
+    actual suspend fun init() {}
+    actual suspend fun stop() {}
 }
