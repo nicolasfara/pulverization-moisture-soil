@@ -26,6 +26,8 @@ esp-idf-svc = "0.45"
 esp-idf-hal = "0.40"
 embedded-svc = "0.24"
 embedded-hal = "0.2"
+json = "0.12.4"
+spmc = "0.3.0"
 
 [build-dependencies]
 embuild = { version = "0.31", features = ["elf"] }

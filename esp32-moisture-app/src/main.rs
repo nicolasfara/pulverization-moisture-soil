@@ -1,12 +1,13 @@
-use std::io::{Read, Write};
-use std::net::TcpStream;
+extern crate core;
+
+use std::io::Write;
+use std::net::{Ipv4Addr, TcpListener, TcpStream};
+use std::thread;
 use std::thread::sleep;
 use std::time::Duration;
-use esp_idf_hal::adc::{AdcChannelDriver, AdcDriver, Atten11dB};
-use esp_idf_hal::adc::config::Config;
-use esp_idf_sys as _; // If using the `binstart` feature of `esp-idf-sys`, always keep this module imported
-use esp_idf_hal::gpio::*;
-use esp_idf_hal::delay::FreeRtos;
+use esp_idf_sys as _;
+// If using the `binstart` feature of `esp-idf-sys`, always keep this module imported
+use esp_idf_hal::adc;
 use esp_idf_hal::{
     peripherals::Peripherals,
 };
@@ -16,7 +17,30 @@ use esp_idf_svc::{
     eventloop::EspSystemEventLoop,
 };
 use embedded_svc::wifi::{ClientConfiguration, Wifi, Configuration};
-use log::info;
+use esp_idf_svc::netif::{EspNetif, EspNetifWait};
+use json::object;
+use spmc::{channel, Receiver};
+
+fn handle_client(mut stream: TcpStream, consumer: Receiver<u16>) {
+    loop {
+        match consumer.recv() {
+            Ok(value) => {
+                let payload = object! {
+                    moisture: value
+                };
+                match stream.write_all(payload.dump().as_bytes()) {
+                    Ok(_) => {}
+                    Err(err) => {
+                        eprintln!("Failed to send moisture value: {}", err);
+                        break;
+                    }
+                }
+                sleep(Duration::new(2, 0))
+            }
+            Err(_) => {}
+        }
+    }
+}
 
 fn main() -> anyhow::Result<()> {
     // It is necessary to call this function once. Otherwise some patches to the runtime
@@ -24,22 +48,29 @@ fn main() -> anyhow::Result<()> {
     esp_idf_sys::link_patches();
 
     let peripherals = Peripherals::take().unwrap();
-    let sys_loop = EspSystemEventLoop::take().unwrap();
+    let sys_loop = EspSystemEventLoop::take()?;
     let nvs = EspDefaultNvsPartition::take().unwrap();
+    let mut adc_pin = adc::AdcChannelDriver::<_, adc::Atten11dB<adc::ADC1>>::new(peripherals.pins.gpio34)?;
+    let mut adc = adc::AdcDriver::new(
+        peripherals.adc1,
+        &adc::config::Config::new().calibration(true)
+    )?;
 
-    let mut led = PinDriver::output(peripherals.pins.gpio4)?;
-    let mut adc = AdcDriver::new(peripherals.adc2, &Config::new().calibration(true))?;
-    let mut adc_pin: AdcChannelDriver<'_, Gpio12, Atten11dB<_>> = AdcChannelDriver::new(peripherals.pins.gpio12)?;
+    let (mut producer, consumer) = channel();
 
-    let mut wifi_driver = EspWifi::new(
-        peripherals.modem,
-        sys_loop,
-        Some(nvs)
-    ).unwrap();
+    thread::spawn(move || {
+        loop {
+            let value = adc.read(&mut adc_pin).unwrap();
+            producer.send(value).unwrap();
+            sleep(Duration::new(2, 0))
+        }
+    });
+
+    let mut wifi_driver = EspWifi::new(peripherals.modem, sys_loop.clone(), Some(nvs)).unwrap();
 
     wifi_driver.set_configuration(&Configuration::Client(ClientConfiguration {
-        ssid: "Farabegoli Wi-Fi".into(),
-        password: "farabegoliprivate".into(),
+        ssid: env!("SSID").into(),
+        password: env!("PASSWORD").into(),
         ..Default::default()
     })).unwrap();
 
@@ -49,36 +80,32 @@ fn main() -> anyhow::Result<()> {
         let config = wifi_driver.get_configuration().unwrap();
         println!("Waiting for station {:?}", config);
     }
-    println!("Should be connected now");
 
-    let mut stream = TcpStream::connect("1.1.1.1:80")?;
-    let err = stream.try_clone();
-    if let Err(err) = err {
-        info!(
-            "Duplication of file descriptors does not work (yet) on the ESP-IDF, as expected: {}",
-            err
-        );
+    if !EspNetifWait::new::<EspNetif>(wifi_driver.sta_netif(), &sys_loop.clone()).unwrap().wait_with_timeout(
+        Duration::from_secs(20),
+        || { wifi_driver.is_connected().unwrap() && wifi_driver.sta_netif().get_ip_info().unwrap().ip != Ipv4Addr::new(0,0,0,0) }
+    ) {
+        panic!("")
     }
 
-    stream.write_all("GET / HTTP/1.0\n\n".as_bytes())?;
-
-    let mut result = Vec::new();
-
-    stream.read_to_end(&mut result)?;
-
-    info!(
-        "1.1.1.1 returned:\n=================\n{}\n=================\nSince it returned something, all is OK",
-        std::str::from_utf8(&result)?);
+    let listener = TcpListener::bind("0.0.0.0:8088").unwrap();
+    println!("Server listening on port 8088");
 
 
-    loop {
-        println!("IP info: {:?}", wifi_driver.sta_netif().get_ip_info().unwrap());
-        sleep(Duration::new(10,0))
-        // led.set_high()?;
-        // FreeRtos::delay_ms(1000);
-        // led.set_low()?;
-        // FreeRtos::delay_ms(1000);
-        // let read = adc.read(&mut adc_pin).unwrap();
-        // println!("ADC read: {}", read);
+    for stream in listener.incoming() {
+        match stream {
+            Ok(stream) => {
+                println!("New connection: {}", stream.peer_addr().unwrap());
+                let cons = consumer.clone();
+                thread::Builder::new()
+                    .stack_size(7000).spawn(move || {
+                    handle_client(stream, cons);
+                }).ok();
+            }
+            Err(e) => {
+                eprintln!("Error: {}", e);
+            }
+        }
     }
+    Ok(())
 }
