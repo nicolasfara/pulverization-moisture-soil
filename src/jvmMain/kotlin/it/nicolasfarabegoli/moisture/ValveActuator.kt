@@ -1,43 +1,52 @@
 package it.nicolasfarabegoli.moisture
 
-import com.pi4j.context.Context
-import com.pi4j.io.gpio.digital.DigitalState
-import com.pi4j.ktx.io.digital.digitalOutput
-import com.pi4j.ktx.pi4j
+import io.ktor.network.selector.SelectorManager
+import io.ktor.network.sockets.aSocket
+import io.ktor.network.sockets.openWriteChannel
+import io.ktor.utils.io.writeStringUtf8
 import it.nicolasfarabegoli.pulverization.core.Actuator
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 actual class ValveActuator actual constructor() : Actuator<Boolean> {
-    private lateinit var job: Job
-    private lateinit var ctx: Context
-    private val channel = Channel<Boolean>()
+
+    private lateinit var listenJob: Job
+    private var valveOpened = false
 
     companion object {
-        private const val VALVE_PIN = 22
+        private const val PORT = 8088
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     actual suspend fun init() = coroutineScope {
-        job = launch { valveManagement() }
+        val selectorManager = SelectorManager(Dispatchers.IO)
+        val serverSocket = aSocket(selectorManager).tcp().bind("0.0.0.0", PORT)
+
+        listenJob = GlobalScope.launch(Dispatchers.IO) {
+            while (true) {
+                val socket = serverSocket.accept()
+                println("New connection $socket")
+                launch {
+                    val sendChannel = socket.openWriteChannel(autoFlush = true)
+                    sendChannel.writeStringUtf8(if (valveOpened) "1" else "0")
+                    delay(500.milliseconds)
+                }
+            }
+        }
     }
 
     actual suspend fun stop() {
-        ctx.shutdown()
-        job.cancelAndJoin()
+        listenJob.cancelAndJoin()
     }
 
-    override fun actuate(payload: Boolean) {}
-
-    private suspend fun valveManagement() {
-        pi4j {
-            ctx = this
-            val valveGPIO = digitalOutput(VALVE_PIN) { initial(DigitalState.LOW) }
-            while (true) {
-                valveGPIO.setState(channel.receive())
-            }
-        }
+    override suspend fun actuate(payload: Boolean) {
+        valveOpened = payload
     }
 }

@@ -54,5 +54,5 @@ actual class MoistureSensor : Sensor<Double> {
         listenSensorJob.cancelAndJoin()
     }
 
-    override fun sense(): Double = moisture
+    override suspend fun sense(): Double = moisture
 }
