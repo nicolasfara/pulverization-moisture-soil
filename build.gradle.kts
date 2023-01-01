@@ -30,28 +30,27 @@ kotlin {
     }
 
     // Native platforms
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(libs.kotlin.stdlib)
-                implementation(libs.bundles.pulverization)
-                implementation(libs.kotlinx.coroutines.core)
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(libs.bundles.pi4j)
-            }
-        }
-
-        val nativeMain by creating {
-            dependsOn(commonMain)
+    val commonMain by sourceSets.getting {
+        dependencies {
+            implementation(libs.kotlin.stdlib)
+            implementation(libs.bundles.pulverization)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.network)
         }
     }
 
+    val jvmMain by sourceSets.getting {
+        dependencies {
+            implementation(libs.bundles.pi4j)
+        }
+    }
+
+    val nativeMain by sourceSets.creating {
+        dependsOn(commonMain)
+    }
+
     linuxX64 {
-        compilations["main"].defaultSourceSet.dependsOn(sourceSets["nativeMain"])
+        compilations["main"].defaultSourceSet.dependsOn(nativeMain)
 //        binaries {
 //            executable {
 //                entryPoint = "it.nicolasfarabegoli.moisture.main"

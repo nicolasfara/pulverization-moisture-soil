@@ -5,6 +5,7 @@ ktlint = "11.0.0"
 koin = "3.3.2"
 pi4j = "2.3.0"
 shadowjar = "7.1.2"
+ktor = "2.2.1"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -24,6 +25,7 @@ pi4j-ktx = { module = "com.pi4j:pi4j-ktx", version.ref = "pi4j" }
 pi4j-core = { module = "com.pi4j:pi4j-core", version.ref = "pi4j" }
 pi4j-raspberry = { module = "com.pi4j:pi4j-plugin-raspberrypi", version.ref = "pi4j" }
 pi4j-gpio = { module = "com.pi4j:pi4j-plugin-pigpio", version.ref = "pi4j" }
+ktor-network = { module = "io.ktor:ktor-network", version.ref = "ktor" }
 
 [bundles]
 pulverization = ["pulverization-core", "pulverization-platform", "pulverization-rabbitmq", "koin-core"]
