@@ -28,7 +28,7 @@ fn handle_client(mut stream: TcpStream, consumer: Receiver<u16>) {
                 let payload = object! {
                     moisture: value
                 };
-                match stream.write_all(payload.dump().as_bytes()) {
+                match stream.write_all(format!("{}\n", payload.dump()).as_bytes()) {
                     Ok(_) => {}
                     Err(err) => {
                         eprintln!("Failed to send moisture value: {}", err);
@@ -61,6 +61,7 @@ fn main() -> anyhow::Result<()> {
     thread::spawn(move || {
         loop {
             let value = adc.read(&mut adc_pin).unwrap();
+            println!("Read value: {}", value);
             producer.send(value).unwrap();
             sleep(Duration::new(2, 0))
         }
