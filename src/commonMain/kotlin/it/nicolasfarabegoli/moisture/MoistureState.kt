@@ -18,13 +18,19 @@ data class MoistureState(val moisture: Double) : StateOps
 
 class DeviceState : State<StateOps> {
     override val context: Context by inject()
+    private var state = MoistureState(0.0)
 
-    override fun get(): StateOps {
-        TODO("Not yet implemented")
-    }
+    override fun get(): StateOps = state
 
     override fun update(newState: StateOps): StateOps {
-        TODO("Not yet implemented")
+        return when (newState) {
+            is GetState -> state
+            is MoistureState -> {
+                val old = state
+                state = MoistureState(newState.moisture)
+                old
+            }
+        }
     }
 }
 
