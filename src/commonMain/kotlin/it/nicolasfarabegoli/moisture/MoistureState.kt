@@ -28,7 +28,7 @@ class DeviceState : State<StateOps> {
     }
 }
 
-suspend fun stateLogic(state: State<StateOps>, behaviour: BehaviourRef<StateOps>) {
+suspend fun moistureStateLogic(state: State<StateOps>, behaviour: BehaviourRef<StateOps>) {
     behaviour.receiveFromComponent().collect {
         when (it) {
             is GetState -> behaviour.sendToComponent(state.get())

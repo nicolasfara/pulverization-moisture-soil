@@ -24,7 +24,7 @@ class DeviceActuator : ActuatorsContainer() {
     }
 }
 
-suspend fun actuatorsLogic(actuators: ActuatorsContainer, behaviour: BehaviourRef<Boolean>) {
+suspend fun valveActuatorsLogic(actuators: ActuatorsContainer, behaviour: BehaviourRef<Boolean>) {
     actuators.get<ValveActuator> {
         behaviour.receiveFromComponent().collect {
             actuate(it)

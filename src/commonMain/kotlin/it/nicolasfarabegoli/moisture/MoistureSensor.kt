@@ -22,7 +22,7 @@ class DeviceSensors : SensorsContainer() {
     }
 }
 
-suspend fun sensorLogic(sensors: SensorsContainer, behaviour: BehaviourRef<Double>) {
+suspend fun moistureSensorLogic(sensors: SensorsContainer, behaviour: BehaviourRef<Double>) {
     sensors.get<MoistureSensor> {
         while (true) {
             behaviour.sendToComponent(sense())
