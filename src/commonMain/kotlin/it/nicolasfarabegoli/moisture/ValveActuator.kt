@@ -20,7 +20,7 @@ class DeviceActuator : ActuatorsContainer() {
     }
 
     override suspend fun finalize() {
-        this.get<ValveActuator> { stop() }
+        get<ValveActuator> { stop() }
     }
 }
 

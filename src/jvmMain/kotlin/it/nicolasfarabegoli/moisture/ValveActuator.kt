@@ -35,8 +35,10 @@ actual class ValveActuator actual constructor() : Actuator<Boolean> {
                 println("New connection $socket")
                 launch {
                     val sendChannel = socket.openWriteChannel(autoFlush = true)
-                    sendChannel.writeStringUtf8(if (valveOpened) "1" else "0")
-                    delay(500.milliseconds)
+                    while (true) {
+                        sendChannel.writeStringUtf8(if (valveOpened) "1\n" else "0\n")
+                        delay(5000.milliseconds)
+                    }
                 }
             }
         }
