@@ -3,7 +3,7 @@ kotlin = "1.8.0"
 detekt = "1.22.0"
 ktlint = "11.0.0"
 koin = "3.3.2"
-pi4j = "2.3.0"
+pi4j = "2.2.1"
 shadowjar = "7.1.2"
 ktor = "2.2.1"
 
@@ -17,6 +17,7 @@ shadowjar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowjar" 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.6.4" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.4.1" }
 pulverization-core = { module = "it.nicolasfarabegoli.pulverization-framework:core", version = "0.4.3" }
 pulverization-platform = { module = "it.nicolasfarabegoli.pulverization-framework:platform", version = "0.4.3" }
 pulverization-rabbitmq = { module = "it.nicolasfarabegoli.pulverization-framework:rabbitmq-platform", version = "0.4.3" }

@@ -35,6 +35,7 @@ kotlin {
             implementation(libs.kotlin.stdlib)
             implementation(libs.bundles.pulverization)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization)
             implementation(libs.ktor.network)
         }
     }
