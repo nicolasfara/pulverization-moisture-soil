@@ -21,7 +21,7 @@ use esp_idf_svc::netif::{EspNetif, EspNetifWait};
 use json::object;
 use spmc::{channel, Receiver};
 
-fn handle_client(mut stream: TcpStream, consumer: Receiver<u16>) {
+fn handle_client(mut stream: TcpStream, consumer: Receiver<f32>) {
     loop {
         match consumer.recv() {
             Ok(value) => {
@@ -61,8 +61,9 @@ fn main() -> anyhow::Result<()> {
     thread::spawn(move || {
         loop {
             let value = adc.read(&mut adc_pin).unwrap();
-            println!("Read value: {}", value);
-            producer.send(value).unwrap();
+            let percentage = (value as f32 - 142.0) * 100.0 / 3954.0;
+            println!("Read value: {}", percentage);
+            producer.send(percentage).unwrap();
             sleep(Duration::new(2, 0))
         }
     });

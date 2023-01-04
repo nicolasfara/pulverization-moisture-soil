@@ -1,0 +1,65 @@
+version: "3"
+
+x-sensors: &sensors
+  build:
+    context: ./
+  command: "sensors-all.jar"
+
+x-actuators: &actuators
+  build:
+    context: ./
+  command: "actuators-all.jar"
+
+x-behaviour: &behaviour
+  build:
+    context: ./
+  command: "behaviour-all.jar"
+
+x-link: &link
+  restart: on-failure
+  depends_on:
+    - rabbitmq
+  links:
+    - rabbitmq
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - proxynet
+
+  behaviour:
+    <<: *behaviour
+    environment:
+      DEVICE_ID: "1"
+    networks:
+      - proxynet
+    <<: *link
+
+  sensors:
+    <<: *sensors
+    environment:
+      DEVICE_ID: "1"
+      SENSOR_IP: "10.255.255.148"
+      SENSOR_PORT: "8088"
+    networks:
+      - proxynet
+    <<: *link
+
+  actuators:
+    <<: *actuators
+    environment:
+      DEVICE_ID: "1"
+    ports:
+      - "8088:8088"
+    networks:
+      - proxynet
+    <<: *link
+
+networks:
+  proxynet:
+    name: custom_network

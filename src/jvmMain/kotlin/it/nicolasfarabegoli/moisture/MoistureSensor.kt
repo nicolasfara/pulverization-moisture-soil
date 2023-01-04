@@ -25,14 +25,12 @@ actual class MoistureSensor : Sensor<Double> {
     private lateinit var listenSensorJob: Job
     private var moisture: Double = 0.0
 
-    companion object {
-        private const val PORT = 8088
-    }
-
     @OptIn(DelicateCoroutinesApi::class)
     actual suspend fun init() = coroutineScope {
         val selectorManager = SelectorManager(Dispatchers.IO)
-        val socketClient = aSocket(selectorManager).tcp().connect("10.255.255.148", PORT)
+        val sensorDeviceIP = System.getenv("SENSOR_IP") ?: error("Unable to find the sensor IP")
+        val sensorDevicePort = System.getenv("SENSOR_PORT").toIntOrNull() ?: error("Unable to find the sensor port")
+        val socketClient = aSocket(selectorManager).tcp().connect(sensorDeviceIP, sensorDevicePort)
         val receiveChannel = socketClient.openReadChannel()
 
         listenSensorJob = GlobalScope.launch(Dispatchers.IO) {

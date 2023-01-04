@@ -26,6 +26,19 @@ kotlin {
                     "it.nicolasfarabegoli.moisture.units.SensorsUnitKt",
                 )
             }
+            register<ShadowJar>("actuatorsJar") {
+                genericJarConfig(
+                    "actuators",
+                    "it.nicolasfarabegoli.moisture.units.ActuatorsUnitKt",
+                )
+            }
+            register<ShadowJar>("behaviourJar") {
+                genericJarConfig(
+                    "behaviour",
+                    "it.nicolasfarabegoli.moisture.units.BehaviourUnitKt",
+                )
+            }
+            register("generateJars") { dependsOn("sensorsJar", "actuatorsJar", "behaviourJar") }
         }
     }
 

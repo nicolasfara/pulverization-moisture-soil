@@ -16,7 +16,7 @@ class SoilMoistureBehaviour : Behaviour<StateOps, NoComm, Double, Boolean, Unit>
     override val context: Context by inject()
 
     companion object {
-        private const val TARGET_MOISTURE = 0.75
+        private const val TARGET_MOISTURE = 30.0
     }
 
     override fun invoke(

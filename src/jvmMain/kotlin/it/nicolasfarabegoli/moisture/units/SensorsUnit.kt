@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 fun main() = runBlocking {
     val platform = pulverizationPlatform(configuration.getDeviceConfiguration("moisture")!!) {
         sensorsLogic(DeviceSensors(), ::moistureSensorLogic)
-        withPlatform { RabbitmqCommunicator() }
+        withPlatform { RabbitmqCommunicator(hostname = "rabbitmq") }
         withRemotePlace { defaultRabbitMQRemotePlace() }
     }
     platform.start().joinAll()
