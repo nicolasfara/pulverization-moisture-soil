@@ -44,7 +44,7 @@ services:
     <<: *sensors
     environment:
       DEVICE_ID: "1"
-      SENSOR_IP: "10.255.255.148"
+      SENSOR_IP: "192.168.54.247"
       SENSOR_PORT: "8088"
     networks:
       - proxynet
