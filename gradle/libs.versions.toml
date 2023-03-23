@@ -18,9 +18,9 @@ shadowjar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowjar" 
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.6.4" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.5.0" }
-pulverization-core = { module = "it.nicolasfarabegoli.pulverization-framework:core", version = "0.4.12" }
-pulverization-platform = { module = "it.nicolasfarabegoli.pulverization-framework:platform", version = "0.4.12" }
-pulverization-rabbitmq = { module = "it.nicolasfarabegoli.pulverization-framework:rabbitmq-platform", version = "0.4.12" }
+pulverization-core = { module = "it.nicolasfarabegoli.pulverization-framework:core", version = "0.4.13" }
+pulverization-platform = { module = "it.nicolasfarabegoli.pulverization-framework:platform", version = "0.4.13" }
+pulverization-rabbitmq = { module = "it.nicolasfarabegoli.pulverization-framework:rabbitmq-platform", version = "0.4.13" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 pi4j-ktx = { module = "com.pi4j:pi4j-ktx", version.ref = "pi4j" }
 pi4j-core = { module = "com.pi4j:pi4j-core", version.ref = "pi4j" }
