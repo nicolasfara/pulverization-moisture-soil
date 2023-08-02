@@ -5,7 +5,7 @@ ktlint = "11.5.0"
 koin = "3.4.3"
 pi4j = "2.4.0"
 shadowjar = "8.1.1"
-ktor = "2.3.2"
+ktor = "2.3.3"
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
