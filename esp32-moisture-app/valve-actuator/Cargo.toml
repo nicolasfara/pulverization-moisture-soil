@@ -14,7 +14,7 @@ log = "0.4"
 url = "2"
 esp-idf-sys = { version = "0.33", features = ["binstart"] }
 esp-idf-svc = "0.46"
-esp-idf-hal = "0.41"
+esp-idf-hal = "0.42"
 embedded-svc = "0.26"
 embedded-hal = "0.2"
 json = "0.12.4"
