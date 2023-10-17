@@ -22,7 +22,7 @@ url = "2"
 esp-idf-sys = { version = "0.33", features = ["binstart"] }
 esp-idf-svc = "0.46"
 esp-idf-hal = "0.41"
-embedded-svc = "0.25"
+embedded-svc = "0.26"
 embedded-hal = "0.2"
 json = "0.12.4"
 spmc = "0.3.0"
