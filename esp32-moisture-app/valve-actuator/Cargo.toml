@@ -15,7 +15,7 @@ url = "2"
 esp-idf-sys = { version = "0.33", features = ["binstart"] }
 esp-idf-svc = "0.47"
 esp-idf-hal = "0.42"
-embedded-svc = "0.26"
+embedded-svc = "0.27"
 embedded-hal = "1.0"
 json = "0.12.4"
 spmc = "0.3.0"
