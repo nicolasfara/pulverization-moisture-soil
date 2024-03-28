@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.9.23"
-detekt = "1.23.5"
+detekt = "1.23.6"
 ktlint = "12.1.0"
 koin = "3.5.3"
 pi4j = "2.5.1"
