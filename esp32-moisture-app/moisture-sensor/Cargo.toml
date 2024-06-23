@@ -28,5 +28,5 @@ json = "0.12.4"
 spmc = "0.3.0"
 
 [build-dependencies]
-embuild = { version = "0.31.4", features = ["elf"] }
+embuild = { version = "0.32.0", features = ["elf"] }
 anyhow = "1.0.82"
