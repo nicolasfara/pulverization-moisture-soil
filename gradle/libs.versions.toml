@@ -17,7 +17,7 @@ shadowjar = { id = "com.github.johnrengelman.shadow", version.ref = "shadowjar" 
 [libraries]
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.8.1" }
-kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.0" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.1" }
 pulverization-core = { module = "it.nicolasfarabegoli.pulverization-framework:core", version = "0.7.2" }
 pulverization-platform = { module = "it.nicolasfarabegoli.pulverization-framework:platform", version = "0.7.2" }
 pulverization-rabbitmq = { module = "it.nicolasfarabegoli.pulverization-framework:rabbitmq-platform", version = "0.7.2" }
