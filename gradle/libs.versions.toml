@@ -3,7 +3,7 @@ kotlin = "2.1.10"
 detekt = "1.23.7"
 ktlint = "12.1.2"
 koin = "4.0.2"
-pi4j = "2.7.0"
+pi4j = "2.8.0"
 shadowjar = "8.1.1"
 ktor = "3.0.3"
 
