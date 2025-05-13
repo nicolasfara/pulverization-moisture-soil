@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 detekt = "1.23.8"
 ktlint = "12.2.0"
 koin = "4.0.4"
