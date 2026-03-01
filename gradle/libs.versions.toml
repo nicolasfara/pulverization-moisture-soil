@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.3.10"
 detekt = "1.23.8"
-ktlint = "13.1.0"
+ktlint = "14.0.1"
 koin = "4.1.1"
 pi4j = "3.0.3"
 shadowjar = "8.1.1"
